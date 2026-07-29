@@ -148,6 +148,7 @@ Log in an existing user.
 
 Represents transit routes (origin, destination, fare, stops) — not to be confused with Express routing.
 
+
 #### `GET /api/routes`
 Get all routes. No auth required.
 
@@ -172,7 +173,7 @@ Get a single route by ID. No auth required.
 **Response — 200 OK:** single route object (as above)
 **Errors:** `404` — route not found
 
-#### `POST /api/routes`
+#### `POST /api/routes/register`
 Create a new route. **Requires auth.**
 
 **Body:**
