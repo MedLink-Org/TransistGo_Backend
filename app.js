@@ -5,18 +5,23 @@ import authRoutes from "./routes/auth.routes.js";
 import routeRoutes from "./routes/route.routes.js";
 import vehicleRoutes from "./routes/vehicle.routes.js";
 import tripRoutes from "./routes/trip.routes.js";
+import ticketRoutes from "./routes/ticket.routes.js";
 import morgan from 'morgan';
 dotenv.config();
 
 const app = express();
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({
+    origin: 'frontend link',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+}));
 app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/api/routes', routeRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/trips', tripRoutes);
+app.use('/api/ticket', ticketRoutes);
 
 app.get('/', (req, res) => {
     res.status(200).json({
