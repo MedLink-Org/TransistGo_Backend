@@ -267,4 +267,90 @@ Delete a vehicle. **Requires auth.**
 
 ---
 
+## Trips — /api/trips
 
+Represents a scheduled instance of a route — ties together route, driver, vehicle, and departure time.
+
+## `GET /api/trips`
+
+Get all trips, with route name and vehicle plate number joined in. No auth required.
+
+**Response — 200 OK:**
+
+```json
+[
+  {
+    "id": "uuid",
+    "route_id": "uuid",
+    "driver_id": null,
+    "vehicle_id": "uuid",
+    "departure_time": "2026-08-01T08:00:00.000Z",
+    "status": "scheduled",
+    "created_at": "2026-07-29T10:00:00.000Z",
+    "route_name": "Main Gate - Hostel B",
+    "plate_number": "ABC-123-XY"
+  }
+]
+```
+## GET /api/trips/:id
+
+Get a single trip by ID, with route and vehicle info joined in. No auth required.
+
+ single trip object (as above)
+Errors: 404 — trip not found
+
+**POST** /api/trips
+
+Create a new trip. Requires auth.
+
+Body:
+
+```json
+{
+  "route_id": "uuid-of-existing-route",
+  "vehicle_id": "uuid-of-existing-vehicle",
+  "departure_time": "2026-08-01T08:00:00Z"
+}
+```
+vehicle_id and driver_id are optional. route_id and departure_time are required and must reference an existing route.
+
+**Response — 201 Created:** the created trip object
+**Errors:**
+
+`400`— missing route_id or departure_time
+`500` — invalid UUID format for route_id/vehicle_id/driver_id (code 22P02)
+PUT /api/trips/:id
+
+## Update a trip's full details. Requires auth.
+
+Body: same shape as create, plus status
+**Response** — `200` OK: updated trip object
+**Errors**: `404` — trip not found
+
+## PATCH /api/trips/:id/status
+
+Update just the trip's status (for driver apps marking progress). Requires auth.
+
+Body:
+
+```json
+{ "status": "in_transit" }
+```
+Valid values: scheduled, in_transit, completed, cancelled
+
+**Response — 200 OK:** updated trip object
+Errors:
+
+`400` — invalid status value
+`404` — trip not found
+
+## DELETE /api/trips/:id
+
+Delete a trip. Requires auth.
+
+**Response — 200 OK:**
+
+```json
+{ "message": "Trip deleted" }
+```
+**Errors**: `404` — trip not found
