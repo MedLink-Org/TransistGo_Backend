@@ -11,10 +11,26 @@ dotenv.config();
 
 const app = express();
 app.use(morgan("dev"));
+
+const allowedOrigins = [
+    'http://localhost:5174',
+    process.env.FRONTEND_URL,
+];
+
 app.use(cors({
-    origin: 'frontend link',
+    origin: (origin, callback) => {
+        // allow requests with no origin (like Postman, curl, or server-to-server)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS blocked for origin: ${origin}`));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 }));
+
 app.use(express.json());
 
 app.use('/auth', authRoutes);
@@ -28,6 +44,5 @@ app.get('/', (req, res) => {
         status: 'TransistGo  API is running',
     });
 });
-
 
 export default app;
