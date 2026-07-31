@@ -106,3 +106,13 @@ export async function deleteTicket(req, res) {
         res.status(500).json({ message: 'Server error deleting ticket' });
     }
 }
+
+export async function getTicketsByTrip(req, res) {
+    try {
+        const tickets = await TicketModel.findByTripId(req.params.tripId);
+        res.json(tickets);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching trip passengers' });
+    }
+}

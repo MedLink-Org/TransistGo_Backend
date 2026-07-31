@@ -66,3 +66,14 @@ export async function remove(id) {
     const result = await pool.query('DELETE FROM tickets WHERE id = $1 RETURNING *', [id]);
     return result.rows[0] || null;
 }
+export async function findByTripId(trip_id) {
+    const result = await pool.query(
+        `SELECT tickets.*, users.name AS passenger_name, users.email
+         FROM tickets
+         JOIN users ON tickets.passenger_id = users.id
+         WHERE tickets.trip_id = $1
+         ORDER BY tickets.created_at ASC`,
+        [trip_id]
+    );
+    return result.rows;
+}

@@ -53,15 +53,15 @@ export async function remove(id) {
     return result.rows[0] || null;
 }
 
-export async function findByDriverId(driverId) {
+export async function findByDriverId(driver_id) {
     const result = await pool.query(
         `SELECT trips.*, routes.name AS route_name, vehicles.plate_number
          FROM trips
          JOIN routes ON trips.route_id = routes.id
          LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
          WHERE trips.driver_id = $1
-         ORDER BY trips.departure_time DESC`,
-        [driverId]
+         ORDER BY trips.departure_time ASC`,
+        [driver_id]
     );
     return result.rows;
 }

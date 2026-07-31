@@ -84,3 +84,13 @@ export async function getTrips(req, res) {
         res.status(500).json({ message: 'Error fetching trips: ', error });
     }
 }
+
+export async function getMyTrips(req, res) {
+    try {
+        const trips = await TripModel.findByDriverId(req.user.id);
+        res.json(trips);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching your trips' });
+    }
+}
