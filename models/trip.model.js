@@ -51,3 +51,16 @@ export async function remove(id) {
     const result = await pool.query('DELETE FROM trips WHERE id = $1 RETURNING *', [id]);
     return result.rows[0] || null;
 }
+
+export async function findByDriverId(driverId) {
+    const result = await pool.query(
+        `SELECT trips.*, routes.name AS route_name, vehicles.plate_number
+         FROM trips
+         JOIN routes ON trips.route_id = routes.id
+         LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
+         WHERE trips.driver_id = $1
+         ORDER BY trips.departure_time DESC`,
+        [driverId]
+    );
+    return result.rows;
+}

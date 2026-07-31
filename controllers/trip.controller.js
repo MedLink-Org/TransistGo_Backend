@@ -14,14 +14,14 @@ export async function createTrip(req, res) {
     }
 }
 
-export async function getTrips(req, res) {
-    try {
-        const trips = await TripModel.findAll();
-        res.status(200).json(trips);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching trips: ', error });
-    }
-}
+// export async function getTrips(req, res) {
+//     try {
+//         const trips = await TripModel.findAll();
+//         res.status(200).json(trips);
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error fetching trips: ', error });
+//     }
+// }
 
 export async function getTripById(req, res) {
     try{
@@ -70,5 +70,17 @@ export async function deleteTrip(req, res) {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error deleting trip' });
+    }
+}
+
+export async function getTrips(req, res) {
+    try {
+        const { driver_id } = req.query;
+        const trips = driver_id
+            ? await TripModel.findByDriverId(driver_id)
+            : await TripModel.findAll();
+        res.status(200).json(trips);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching trips: ', error });
     }
 }
