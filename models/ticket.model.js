@@ -1,13 +1,13 @@
 import pool from '../config/db.js';
 import crypto from 'crypto';
 
-export async function create({ trip_id, passenger_id }) {
-    const qr_code = crypto.randomBytes(16).toString('hex'); // unique boarding code
+export async function create({ trip_id, passenger_id, seat_count, boarding_stop }) {
+    const qr_code = crypto.randomBytes(16).toString('hex');
 
     const result = await pool.query(
-        `INSERT INTO tickets (trip_id, passenger_id, qr_code)
-         VALUES ($1, $2, $3) RETURNING *`,
-        [trip_id, passenger_id, qr_code]
+        `INSERT INTO tickets (trip_id, passenger_id, qr_code, seat_count, boarding_stop)
+         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [trip_id, passenger_id, qr_code, seat_count || 1, boarding_stop || null]
     );
     return result.rows[0];
 }

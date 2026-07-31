@@ -1,15 +1,18 @@
 import * as TicketModel from '../models/ticket.model.js';
 
 export async function createTicket(req, res) {
-    const { trip_id } = req.body;
-    const passenger_id = req.user.id; // from verifyToken
+    const { trip_id, seat_count, boarding_stop } = req.body;
+    const passenger_id = req.user.id;
 
     if (!trip_id) {
         return res.status(400).json({ message: 'trip_id is required' });
     }
+    if (seat_count && (!Number.isInteger(seat_count) || seat_count < 1)) {
+        return res.status(400).json({ message: 'seat_count must be a positive integer' });
+    }
 
     try {
-        const ticket = await TicketModel.create({ trip_id, passenger_id });
+        const ticket = await TicketModel.create({ trip_id, passenger_id, seat_count, boarding_stop });
         res.status(201).json(ticket);
     } catch (err) {
         console.error(err);

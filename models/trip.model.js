@@ -9,25 +9,26 @@ export async function create({route_id, driver_id, vehicle_id, departure_time}) 
 }
 
 export async function findAll() {
-    const result = await pool.query(`SELECT trips.*, routes.name AS route_name, vehicles.plate_number
+    const result = await pool.query(
+        `SELECT trips.*, routes.name AS route_name, routes.stops, vehicles.plate_number
          FROM trips
-         JOIN routes ON trips.route_id = routes.id
-         LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
+                  JOIN routes ON trips.route_id = routes.id
+                  LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
          ORDER BY trips.departure_time DESC`
     );
     return result.rows;
 }
 
 export async function findById(id) {
-      const result = await pool.query(
-        `SELECT trips.*, routes.name AS route_name, vehicles.plate_number
+    const result = await pool.query(
+        `SELECT trips.*, routes.name AS route_name, routes.stops, vehicles.plate_number
          FROM trips
          JOIN routes ON trips.route_id = routes.id
          LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
          WHERE trips.id = $1`,
         [id]
     );
-    return result.rows[0];
+    return result.rows[0] || null;
 }
 
 export async function updateStatus(id, status) {
