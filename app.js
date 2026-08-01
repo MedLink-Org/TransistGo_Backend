@@ -6,6 +6,7 @@ import routeRoutes from "./routes/route.routes.js";
 import vehicleRoutes from "./routes/vehicle.routes.js";
 import tripRoutes from "./routes/trip.routes.js";
 import ticketRoutes from "./routes/ticket.routes.js";
+import userRoutes from './routes/user.routes.js';
 import morgan from 'morgan';
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/api/routes', routeRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/ticket', ticketRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
     res.status(200).json({
