@@ -10,7 +10,7 @@ export async function create({route_id, driver_id, vehicle_id, departure_time}) 
 
 export async function findAll() {
     const result = await pool.query(
-        `SELECT trips.*, routes.name AS route_name, routes.stops, vehicles.plate_number
+        `SELECT trips.*, routes.name AS route_name, routes.fare, routes.stops, vehicles.plate_number
          FROM trips
                   JOIN routes ON trips.route_id = routes.id
                   LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
@@ -21,10 +21,10 @@ export async function findAll() {
 
 export async function findById(id) {
     const result = await pool.query(
-        `SELECT trips.*, routes.name AS route_name, routes.stops, vehicles.plate_number
+        `SELECT trips.*, routes.name AS route_name, routes.fare, routes.stops, vehicles.plate_number
          FROM trips
-         JOIN routes ON trips.route_id = routes.id
-         LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
+                  JOIN routes ON trips.route_id = routes.id
+                  LEFT JOIN vehicles ON trips.vehicle_id = vehicles.id
          WHERE trips.id = $1`,
         [id]
     );
